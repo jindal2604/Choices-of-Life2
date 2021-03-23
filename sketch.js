@@ -1,12 +1,15 @@
 const Engine = Matter.Engine;
 const World= Matter.World;
+const Mouse = Matter.Mouse;
 const Bodies = Matter.Bodies;
 const Constraint = Matter.Constraint;
+const MouseConstraint = Matter.MouseConstraint;
 
 var engine, world;
 var backgroundImg
 var play, playImg
 var render 
+var mConstraint;
 
 var gameState = "0"
 function preload() {
@@ -21,38 +24,38 @@ function setup(){
     engine = Engine.create();
     world = engine.world;
 
-    
+    var canvasMouse = Mouse.create(canvas.elt);
+    canvasMouse.pixelRatio = pixelDensity();
+    console.log(canvasMouse);
+
+    play = (displayWidth/2, displayHeight/2)
+    play = Bodies.rectangle(displayWidth/2-150 ,displayHeight/2 -70 , 320, 250)
+   
+    World.add(world, play);
+    console.log(play)
+
+
+    var options = {
+        mouse: canvasMouse
+    }
+
+   mConstraint = MouseConstraint.create(engine, options);
+   World.add(world, mConstraint);
 }
 
 function draw(){
     background(backgroundImg);
-
+    Engine.update(engine);
 //Creating the play button
 
-    play = (displayWidth/2, displayHeight/2)
-    image(playImg, displayWidth/2-150 ,displayHeight/2 -70 , 320, 250)
-    World.add(world, play);
+    image(playImg, displayWidth/2-150 ,displayHeight/2 -70 , 320, 250);
 
-    if(mousePressed(play)){
-        gameState = "1"
-        play.visible = false;
+
+    
+    if(mConstraint.play){
+        World.remove(world, play)
 
     }
-    
-    Engine.update(engine);
    
 }
 
-//Mouse pressed function creation
-
-function mousePressed(){
-    const mouse = Matter.Mouse.create(render.canvas)
-    const mouseConstraint = matter.MouseConstraint.create(engine, {mouse:mouse,
-        constraint: {
-            render: {visible: false}
-        }});
-
-        render.mouse = mouse;
-
-        Matter.World.add(engine.world, [boxA, boxB, ground, mouseConstraint]);
-}
