@@ -2,21 +2,23 @@ const Engine = Matter.Engine;
 const World= Matter.World;
 const Mouse = Matter.Mouse;
 const Bodies = Matter.Bodies;
-const Constraint = Matter.Constraint;
-const MouseConstraint = Matter.MouseConstraint;
 
 var engine, world;
 var backgroundImg
 var play, playImg
 var render 
 var mConstraint;
+var scrollImg, scroll
+
 
 var gameState = "0"
 function preload() {
 //loading the images
     backgroundImg = loadImage("images/background4.jpg");
     playImg = loadImage("images/play.png");
+    scrollImg = loadImage("images/scroll-removebg-preview.png")
 }
+
 
 
 function setup(){
@@ -24,38 +26,31 @@ function setup(){
     engine = Engine.create();
     world = engine.world;
 
-    var canvasMouse = Mouse.create(canvas.elt);
-    canvasMouse.pixelRatio = pixelDensity();
-    console.log(canvasMouse);
+    play = createSprite( displayWidth/2-170 ,displayHeight/2 -100)
+    play.addImage(playImg)
+    play.scale = 0.3
+    
 
-    play = (displayWidth/2, displayHeight/2)
-    play = Bodies.rectangle(displayWidth/2-150 ,displayHeight/2 -70 , 320, 250)
-   
-    World.add(world, play);
-    console.log(play)
-
-
-    var options = {
-        mouse: canvasMouse
-    }
-
-   mConstraint = MouseConstraint.create(engine, options);
-   World.add(world, mConstraint);
 }
 
 function draw(){
     background(backgroundImg);
     Engine.update(engine);
 //Creating the play button
+ 
+   if(mousePressedOver(play)){
+       play.hide()
+       
+   }
 
-    image(playImg, displayWidth/2-150 ,displayHeight/2 -70 , 320, 250);
 
-
-    
-    if(mConstraint.play){
-        World.remove(world, play)
-
-    }
-   
+    drawSprites()
+       
 }
 
+    // function abc(){
+
+    //     scroll = createSprite(displayWidth/2-150 ,displayHeight/2 -70)
+    //     scroll.addImage(scrollImg)
+    //     scroll.scale = 0.9
+    // }
